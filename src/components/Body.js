@@ -1,71 +1,71 @@
 import RestaurantCard from "./RestaurantCard";
 import resList from "../utils/mockData";
 import { use, useEffect, useState } from "react";
+import Shimmer from "./Shimmer";
 
 const Body = () => {
   //Local State Variable
-  const [listOfRestaurants, setListOfRestaurants] = useState(resList); //this is just destructuring of array
+  // const [listOfRestaurants, setListOfRestaurants] = useState(resList); //this is just destructuring of array
+  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [filteredRestaurant, setFilteredRestaurants] = useState([]);
+
+  const [searchText, setSearchText] = useState("");
+  //WHenever State variable update, react triggers reconciliation cycle (re-renders the component)
   // const arr  = useState( resList );
   // const [listOfRestaurants, setListOfRestaurants] = arr;
   // const listOfRestaurants = arr[0];
   // const setListOfRestaurants = arr[1]; // above lines and these are same definition
 
-  //Normal JS variable
-  // let listOfRestaurantsJS = [
-  //     {
-  //         data: {
-  //             id: "334475",
-  //             name: "KFC",
-  //             cloudinaryImageId: "RX_THUMBNAIL/IMAGES/VENDOR/2024/11/5/a64ce30a-7492-444b-a485-1b7e2804e091_671928.JPG",
-  //             cuisines: ["Burgers", "Biryani", "American", "Snacks", "Fast Food"],
-  //             costForTwo: 25000,
-  //             costForTwoString: "₹250 FOR TWO",
-  //             deliveryTime: 31,
-  //             avgRating: "3.8",
-  //         }
-  //     },
-  //     {
-  //         data: {
-  //             id: "334476",
-  //             name: "Meghana Foods",
-  //             cloudinaryImageId: "w_660/iivuhjc2mswi9lublktf",
-  //             cuisines: [
-  //                 "Biryani",
-  //                 "Andhra",
-  //                 "South Indian",
-  //                 "North Indian",
-  //                 "Chinese",
-  //                 "Seafood",
-  //               ],
-  //             costForTwo: 25000,
-  //             costForTwoString: "₹250 FOR TWO",
-  //             deliveryTime: 31,
-  //             avgRating: "4.8",
-  //         }
-  //     }
-
-  // ]
-
+  // console.log(listOfRestaurants[0].info.cloudinaryImageId)
+  // console.log(resList[0].info.cloudinaryImageId)
   useEffect(() => {
     fetchData();
   }, []);
+  // const fetchData = async () => {
+  //   const data = await fetch(
+  //     "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
+  //   );
+  //   const json = await data.json();
+  //   // Optional Chaining
+  //   setListOfRestraunt(json?.data?.cards[2]?.data?.data?.cards);
+  //   setFilteredRestaurant(json?.data?.cards[2]?.data?.data?.cards);
+  // };
 
   const fetchData = async () => {
     const data = await fetch(
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.5223812&lng=77.4085149&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-    console.log(json);
-    console.log(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
-    const restaurants = json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants;
-    console.log(restaurants[0].info.id)
-    setListOfRestaurants(restaurants);
+    // console.log(json);
+    // console.log(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
+    // console.log(listOfRestaurants[0].info.id)
+    setListOfRestaurants(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    setFilteredRestaurants(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
   };
 
   console.log("Body rendered");
-  return (
+
+  //Conditional Rendering
+  // if(listOfRestaurants.length === 0){
+  //   return <Shimmer />
+  // }
+  return listOfRestaurants.length === 0 ? <Shimmer /> : (
     <div className="body">
       <div className="filter">
+        <div className="search">
+          <input type="text" className="search-box" value={searchText} onChange={(e) => {
+            setSearchText(e.target.value);
+          }} />
+          <button onClick={() => {
+            console.log("Search got clicked")
+            const filteredRestaurantList = listOfRestaurants.filter(
+              (res) => res.info.name.toLowerCase().includes(searchText.toLowerCase())
+                // console.log(res.info.name.includes(searchText))
+            );
+            console.log(filteredRestaurantList)
+            setFilteredRestaurants(filteredRestaurantList);
+          }} >Search</button>
+        </div>
         <button
           className="filter-btn"
           onClick={() => {
@@ -73,7 +73,7 @@ const Body = () => {
             const filteredList = listOfRestaurants.filter(
               (res) => res.info.avgRating > 4
             );
-            setListOfRestaurants(filteredList);
+            setFilteredRestaurants(filteredList);
             console.log(listOfRestaurants);
           }}
         >
@@ -81,7 +81,7 @@ const Body = () => {
         </button>
       </div>
       <div className="res-container">
-        {listOfRestaurants.map((restaurant) => (
+        {filteredRestaurant.map((restaurant) => (
           <RestaurantCard key={restaurant.info.id} resData={restaurant} />
         ))}
       </div>
