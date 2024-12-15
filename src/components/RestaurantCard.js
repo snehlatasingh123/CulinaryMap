@@ -7,7 +7,7 @@ const RestaurantCard = (props) => {
   return (
     <div
       className="res-card"
-      style={{ color: "green", backgroundColor: "#f0f0f0" }}
+      style={{ color: "blue", backgroundColor: "#f0f0f0" }}
     >
       {/* <img className="res-logo" alt="res-logo" src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/iivuhjc2mswi9lublktf" /> */}
       <img
