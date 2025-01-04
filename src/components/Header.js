@@ -10,7 +10,7 @@ export const Header = () => {
     <div className="header">
         <div className="nav-container">
           <Link className="food-logo" to="/" >
-            <img className="food-logo" src={food_app_logo} alt="Food-Logo" />
+            <img className="food-logo" src={LOGO_URL} alt="Food-Logo" />
           </Link>
           <div className="nav-item">
             <ul>
