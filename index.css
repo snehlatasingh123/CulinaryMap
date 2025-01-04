@@ -58,27 +58,26 @@
     width: 310px;
     margin: 0px auto;
 }
+
 .res-card {
     margin: 15px;
     width: 310px;
     height: 310px;
     padding: 5px;
-    /* box-shadow: 5px 5px #b5b5b5; */
     border-radius: 2%;
-
     display: grid;
-    transition: 0.05s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
     grid-auto-flow: row;
     justify-content: stretch;
-    -webkit-box-align: center;
     align-items: center;
-    padding: 0px;
-}
-.res-card:hover {
-    border: 1px solid #f0f0f0;
-    cursor: pointer;
-}
+  }
+  
+  .res-card:hover {
+    transform: scale(0.9); /* Slightly reduce the size */
+    /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); Optional: Add a shadow for better effect */
+  }
+  
 .res-logo-outer {
     position: absolute;
     top: 0px;

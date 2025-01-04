@@ -51,11 +51,12 @@ const ResMenuCard = (props) => {
                         </div>
 
                     </div>
-                    <div className="food-image-container">
+
+                    {imageId && <div className="food-image-container">
                         <button className="food-image-box">
                             <img loading="lazy" className="food-img-style" src={"https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/" + imageId} />
                         </button>
-                    </div>
+                    </div>}
 
                 </div>
 

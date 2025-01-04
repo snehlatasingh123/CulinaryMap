@@ -2,7 +2,7 @@ import RestaurantCard from "./RestaurantCard";
 import resList from "../utils/mockData";
 import { use, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import search_icon from "../utils/assets/search.svg"
 
 const Body = () => {

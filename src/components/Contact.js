@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const Contact = () => {
   return (
@@ -57,7 +57,7 @@ const Contact = () => {
             to="tel:+916391927249"
             style={{ textDecoration: "none", color: "#000" }}
           >
-            +91-6391-927-249
+            +91-6391 9272 49
           </Link>
         </li>
       </ul>

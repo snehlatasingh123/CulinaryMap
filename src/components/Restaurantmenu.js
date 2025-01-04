@@ -1,6 +1,6 @@
 import { useState, useEffect, use } from "react";
 import Shimmer from "./Shimmer";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { MENU_API } from "../utils/constants";
 import greenCircle from "../utils/assets/green_circle.png"
 import ResMenuCard from "../components/ResMenuCard";
@@ -29,19 +29,27 @@ const RestaurantMenu = () => {
         const json = await data.json();
         // console.log(json);
         setResInfo(json.data);
-        setListOfDishes(json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards);
-        setFilteredDishes(json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards);
+        setListOfDishes((json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+        ));
+        setFilteredDishes((json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+        ));
         console.log("list", json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards);
         console.log(listOfDishes);
         console.log("listOfDishes", listOfDishes);
 
     };
-    return <ShimmerMenuCard />;
+    // return <ShimmerMenuCard />;
     if (resInfo === null) return <ShimmerMenuCard />;
 
-    const { name, cuisines, costForTwoMessage, areaName, sla, itemAttribute } = resInfo?.cards[2]?.card?.card?.info;
+    const { name, cuisines, costForTwoMessage, areaName, sla, itemAttribute } = (resInfo?.cards[2]?.card?.card?.info===undefined?
+        resInfo?.cards[1]?.card?.card?.info: resInfo?.cards[2]?.card?.card?.info
+    );
     const { itemCards } = resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
-    console.log("itemCards",itemCards);
+    console.log("itemCards",resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card);
 
     // Handlers to toggle the buttons
     // const handleVegToggle = () => {
@@ -111,8 +119,13 @@ const RestaurantMenu = () => {
                     <input type="text" placeholder="Search for Dishes" className="menu-search-button-input" 
                         value={searchDish} onChange={(e) => {
                         setSearchDish(e.target.value);
-                        const filteredDish = listOfDishes.filter((dish) => (dish.card.info.name.toLowerCase().includes(searchDish.toLowerCase()) || dish.card.info.category.toLowerCase().includes(searchDish.toLowerCase()) ));
-                        setFilteredDishes(filteredDish);
+                        const dishInput = e.target.value.toLowerCase();
+                        if(dishInput===""){
+                            setFilteredDishes(listOfDishes);
+                        }else{
+                            const filteredDish = listOfDishes.filter((dish) => (dish.card.info.name.toLowerCase().includes(searchDish.toLowerCase()) || dish.card.info.category.toLowerCase().includes(searchDish.toLowerCase()) ));
+                            setFilteredDishes(filteredDish);
+                        }
                         setIsNonVeg(false);
                         setIsVegDish(false);
                     }} />
