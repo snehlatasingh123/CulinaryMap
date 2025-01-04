@@ -5,7 +5,7 @@ import { MENU_API } from "../utils/constants";
 import greenCircle from "../utils/assets/green_circle.png"
 import ResMenuCard from "../components/ResMenuCard";
 import menu_design from "../utils/assets/menu_design.svg"
-import search_icon from "../utils/assets/search.svg"
+import search_icon from "../utils/assets/search.png"
 import ShimmerMenuCard from "../components/ShimmerMenuCard"
 
 const RestaurantMenu = () => {

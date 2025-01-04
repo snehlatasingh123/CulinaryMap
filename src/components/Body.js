@@ -3,7 +3,7 @@ import resList from "../utils/mockData";
 import { use, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
-import search_icon from "../utils/assets/search.svg"
+import search_icon from "../utils/assets/search.png"
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
