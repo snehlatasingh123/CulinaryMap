@@ -5,7 +5,8 @@
   "scripts": {
     "start": "parcel serve index.html",
     "build": "parcel build index.html",
-    "test": "jest"
+    "test": "jest",
+    "clean": "npx parcel clean"
   },
   "repository": {
     "type": "git",
