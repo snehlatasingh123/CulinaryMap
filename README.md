@@ -54,3 +54,8 @@ omport {Component} from "path";
 normal JS utility function
 - useState() - To generate state variable in react
 - useEffect()
+
+useEffect takes two arguments, one callback function, another optional dependency array
+if the dependency array is not there, useEffect will be called everytime the component renders, 
+but it is not necessary as we don't want to make the API call everytime the component renders, 
+we just want make it once  when our component renders (empty dependency array)

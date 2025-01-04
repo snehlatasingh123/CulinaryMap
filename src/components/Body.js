@@ -2,58 +2,54 @@ import RestaurantCard from "./RestaurantCard";
 import resList from "../utils/mockData";
 import { use, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
-import {Link } from "react-router";
+import { Link } from "react-router";
+import search_icon from "../utils/assets/search.svg"
 
 const Body = () => {
-  //Local State Variable
-  // const [listOfRestaurants, setListOfRestaurants] = useState(resList); //this is just destructuring of array
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurant, setFilteredRestaurants] = useState([]);
 
   const [searchText, setSearchText] = useState("");
-  //WHenever State variable update, react triggers reconciliation cycle (re-renders the component)
-  // const arr  = useState( resList );
-  // const [listOfRestaurants, setListOfRestaurants] = arr;
-  // const listOfRestaurants = arr[0];
-  // const setListOfRestaurants = arr[1]; // above lines and these are same definition
-
-  // console.log(listOfRestaurants[0].info.cloudinaryImageId)
-  // console.log(resList[0].info.cloudinaryImageId)
   useEffect(() => {
     fetchData();
   }, []);
-  // const fetchData = async () => {
-  //   const data = await fetch(
-  //     "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
-  //   );
-  //   const json = await data.json();
-  //   // Optional Chaining
-  //   setListOfRestraunt(json?.data?.cards[2]?.data?.data?.cards);
-  //   setFilteredRestaurant(json?.data?.cards[2]?.data?.data?.cards);
-  // };
-
   const fetchData = async () => {
     const data = await fetch(
-      "https://cors-anywhere.herokuapp.com/https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.5223812&lng=77.4085149&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      "https://thingproxy.freeboard.io/fetch/https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.65200&lng=77.16630&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      
     );
     const json = await data.json();
     // console.log(json);
-    // console.log(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
+    console.log(json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants);
     // console.log(listOfRestaurants[0].info.id)
     setListOfRestaurants(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
     setFilteredRestaurants(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    
   };
 
-  console.log("Body rendered");
+  const handleTopRatedSort = () => {
+    const sortedRestaurants = [...listOfRestaurants].sort((a, b) => {
+      const ratingA = parseFloat(a.info.avgRating || 0);
+      const ratingB = parseFloat(b.info.avgRating || 0);
 
-  //Conditional Rendering
-  // if(listOfRestaurants.length === 0){
-  //   return <Shimmer />
-  // }
+      if (ratingB > ratingA) return 1; // Higher rating first
+      if (ratingB < ratingA) return -1; // Lower rating later
+
+      // If ratings are the same, sort lexicographically by name
+      return a.info.name.localeCompare(b.info.name);
+    });
+
+    setFilteredRestaurants(sortedRestaurants);
+  };
+
+
+  console.log(listOfRestaurants);
+  console.log("Body rendered");
+  // return <Shimmer />;
   return listOfRestaurants.length === 0 ? <Shimmer /> : (
     <div className="body">
       <div className="filter">
-        <div className="search">
+        {/* <div className="search">
           <input type="text" className="search-box" value={searchText} onChange={(e) => {
             setSearchText(e.target.value);
           }} />
@@ -66,26 +62,59 @@ const Body = () => {
             console.log(filteredRestaurantList)
             setFilteredRestaurants(filteredRestaurantList);
           }} >Search</button>
+        </div> */}
+
+        <div className="res-search-container" >
+              <img  className="res-search-icon" src={search_icon} />
+              <div style={{ display: "flex" }} >
+                  <input type="text" placeholder="Search for Restaurant" className="res-search-button-input" 
+                      value={searchText} onChange={(e) => {
+                      setSearchText(e.target.value);
+                      const inputvalue = e.target.value.toLowerCase();
+                      if(inputvalue === ""){
+                        setFilteredRestaurants(listOfRestaurants);
+                      }else{
+                        const filteredRestaurantList = listOfRestaurants.filter(
+                          (res) => res.info.name.toLowerCase().includes(inputvalue)
+                        )
+                        console.log(filteredRestaurantList)
+                        setFilteredRestaurants(filteredRestaurantList);
+                      }
+                  }} />
+              </div>
         </div>
         <button
           className="filter-btn"
-          onClick={() => {
-            //Filter Logic here
-            const filteredList = listOfRestaurants.filter(
-              (res) => res.info.avgRating > 4
-            );
-            setFilteredRestaurants(filteredList);
-            console.log(listOfRestaurants);
-          }}
+          // onClick={() => {
+          //   //Filter Logic here
+          //   const filteredList = listOfRestaurants.filter(
+          //     (res) => res.info.avgRating > 4
+          //   );
+          //   setFilteredRestaurants(filteredList);
+          //   console.log(listOfRestaurants);
+          // }}
+          onClick={handleTopRatedSort}
         >
           Top Rated Restaurant
         </button>
       </div>
-      <div className="res-container">
-        {filteredRestaurant.map((restaurant) => (
-          // <p>ghjk</p>
-          <Link key={restaurant.info.id} to={"/restaurants/"+restaurant.info.id} > <RestaurantCard resData={restaurant} /> </Link>
-        ))} 
+      <div style={{margin:"1% 12%"}}>
+        <div className="res-container-headline">
+          Restaurants with online food delivery in Delhi
+        </div>
+      </div>
+      <div className={`res-container ${filteredRestaurant.length===0?"no-grid":""}`}>
+        
+        {
+          (filteredRestaurant.length===0) ?
+            (
+              <div className="no-name-res">
+                <p>No restaurants found matching "{searchText}"</p>
+              </div>
+            ) :
+           (filteredRestaurant.map((restaurant) => (
+          <Link className="res-card-container" style={{textDecoration:"none"}} key={restaurant.info.id} to={"/restaurants/"+restaurant.info.id} > <RestaurantCard resData={restaurant} /> </Link>
+        )))} 
       </div>
     </div>
   );
