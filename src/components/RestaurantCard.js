@@ -1,5 +1,5 @@
 import { CDN_URL } from "../utils/constants";
-import star from "../utils/assets/star.png"
+import star from "../utils/assets/star_with_circle.png"
 
 const RestaurantCard = (props) => {
   // console.log(props);
