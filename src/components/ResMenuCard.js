@@ -2,6 +2,7 @@
 import veg_label from "../utils/assets/veg_label.svg"
 import non_veg_label from "../utils/assets/non_veg_label.svg"
 import star from "../utils/assets/star.png"
+console.log(non_veg_label);
 
 const ResMenuCard = (props) => {
     // console.log("menuList", props);
