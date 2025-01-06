@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LOGO_URL } from "../utils/constants";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import food_logo from "../utils/assets/food-logo.png"
 
 export const Header = () => {

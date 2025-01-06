@@ -1,6 +1,6 @@
 import { useState, useEffect, use } from "react";
 import Shimmer from "./Shimmer";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { MENU_API } from "../utils/constants";
 import greenCircle from "../utils/assets/green_circle.png"
 import ResMenuCard from "../components/ResMenuCard";

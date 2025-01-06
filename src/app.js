@@ -1,7 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router";
 import { Header } from "./components/Header";
 import Body from "./components/Body";
 import About from "./components/About";
@@ -54,9 +54,9 @@ root.render(<RouterProvider router={appRouter} />);
 // import Contact from "./components/Contact";
 // import Error from "./components/Error";
 // import RestaurantMenu from "./components/Restaurantmenu";
-// // import { Routes } from "react-router-dom";
-// import { Outlet } from "react-router-dom";
-// import { BrowserRouter, Routes } from "react-router-dom";
+// // import { Routes } from "react-router";
+// import { Outlet } from "react-router";
+// import { BrowserRouter, Routes } from "react-router";
 
 
 
