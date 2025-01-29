@@ -1,5 +1,4 @@
 import { useState, useEffect, use } from "react";
-import Shimmer from "./Shimmer";
 import { useParams } from "react-router";
 import { MENU_API } from "../utils/constants";
 import greenCircle from "../utils/assets/green_circle.png"
@@ -7,41 +6,59 @@ import ResMenuCard from "../components/ResMenuCard";
 import menu_design from "../utils/assets/menu_design.svg"
 import search_icon from "../utils/assets/search.png"
 import ShimmerMenuCard from "../components/ShimmerMenuCard"
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 
 const RestaurantMenu = () => {
 
     const [searchDish, setSearchDish] = useState("")
-    const [listOfDishes, setListOfDishes] = useState([]);
+    // const [listOfDishes, setListOfDishes] = useState([]);
     const [filteredDishes, setFilteredDishes] = useState([]);
-    const [resInfo, setResInfo] = useState(null);
+    // const [resInfo, setResInfo] = useState(null);
     const [isVegDish, setIsVegDish] = useState(false);
     const [isNonVeg, setIsNonVeg] = useState(false);
 
     const { resId } = useParams();
     console.log(resId);
 
-    
+    const resInfo = useRestaurantMenu(resId);
+    console.log("resInfo-from-custom-hook", resInfo)
+    const listOfDishes = (resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+        resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+        resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+    );
+    // filteredDishes = (resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+    // );
     useEffect(() => {
-        fetchMenu();
-    }, [])
-    const fetchMenu = async () => {
-        const data = await fetch(MENU_API + resId);
-        const json = await data.json();
-        // console.log(json);
-        setResInfo(json.data);
-        setListOfDishes((json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
-            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
-            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
-        ));
-        setFilteredDishes((json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
-            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
-            json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
-        ));
-        console.log("list", json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards);
-        console.log(listOfDishes);
-        console.log("listOfDishes", listOfDishes);
+        if (listOfDishes?.length > 0) {
+            setFilteredDishes(listOfDishes);
+        }
+    }, [listOfDishes]);
+    // setListOfDishes((resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+    // ));
+    // setFilteredDishes((resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards===undefined ? 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card.itemCards: 
+    //     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards
+    // ));
+    console.log("listOfDishes", listOfDishes);
+    console.log("filteredDishes", filteredDishes);
+    // useEffect(() => {
+    //     fetchMenu();
+    // }, [])
+    // const fetchMenu = async () => {
+    //     const data = await fetch(MENU_API + resId);
+    //     const json = await data.json();
+    //     // console.log(json);
+    //     // setResInfo(json.data);
+        
+    //     console.log("list", json.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card.itemCards);
+    //     console.log(listOfDishes);
+    //     console.log("listOfDishes", listOfDishes);
 
-    };
+    // };
     // return <ShimmerMenuCard />;
     if (resInfo === null) return <ShimmerMenuCard />;
 
